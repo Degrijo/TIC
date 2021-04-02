@@ -10,7 +10,7 @@ from django_countries.fields import CountryField
 # Перевозка(откуда, куда, цена, время принятия заказы, время завершения заказа, груз, клиент1, клиент2, работник, автомобиль, масса и свойста груза)
 
 
-class Client(AbstractUser):
+class CustomUser(AbstractUser):
     # common
     phone_number = models.CharField(max_length=12)  # добавлять + в начало
     country = CountryField()
@@ -55,7 +55,7 @@ class Shipping(models.Model):
     finish_datetime = models.DateTimeField(blank=True, null=True)
     mass = models.PositiveSmallIntegerField()
     cargo_features = models.ManyToManyField('core.CargoFeature', related_name='shippings')
-    sender = models.ForeignKey('core.Client', on_delete=models.CASCADE, related_name='packages')
-    recipient = models.ForeignKey('core.Client', on_delete=models.CASCADE, related_name='parcels')
-    employee = models.ForeignKey('core.Client', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
+    sender = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='packages')
+    recipient = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='parcels')
+    employee = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
     car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='shippings', blank=True, null=True)
