@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from app.core.views import SignUpClientView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('signup_client/', SignUpClientView.as_view(), name='signup_client')
 ]
