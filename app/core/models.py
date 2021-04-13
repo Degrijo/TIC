@@ -14,6 +14,10 @@ class CustomUser(AbstractUser):
     # common
     phone_number = models.CharField(max_length=12)  # добавлять + в начало
     country = CountryField()
+    username = None
+    email = models.EmailField(unique=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     CLIENT_ROLE = 1
     EMPLOYEE_ROLE = 2
     ROLE_TYPE = (
@@ -24,6 +28,7 @@ class CustomUser(AbstractUser):
     # Client
     passport = models.CharField(max_length=9)
     # Employee
+
 
 
 class CargoFeature(models.Model):
