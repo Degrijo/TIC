@@ -1,8 +1,8 @@
-from django.contrib.auth import authenticate, login, get_user_model
+from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView
 
-from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm
+from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, CreateOrderForm
 
 # Главная страница, Регистрация Клиента (имя, фамилия, пароль, паспорт, страна, номер телефона, почта),
 # Вход Клиента (номер телефона/почта, пароль), Регистрация работника (имя, фамилия, пароль, номер телефона, страна
@@ -48,5 +48,8 @@ class SignUpEmployeeView(FormView):
         return super().form_valid(form)
 
 
-class OrderingView(FormView):
-    template_name = ''
+class CreateOrderView(CreateView):
+    template_name = 'core/create_order.html'
+    form_class = CreateOrderForm
+    success_url = reverse_lazy('main_page')
+

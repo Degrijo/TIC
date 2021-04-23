@@ -32,7 +32,6 @@ class UserManager(BaseUserManager):
         return self.create_client()
 
 
-
 class CustomUser(AbstractUser):
     # common
     phone_number = models.CharField(max_length=12, unique=True)
@@ -75,7 +74,7 @@ class Car(models.Model):
     lifting = models.PositiveSmallIntegerField()
 
 
-class Shipping(models.Model):
+class Order(models.Model):
     start_point = PointField()
     end_point = PointField()
     price = models.DecimalField(max_digits=9, decimal_places=2)
@@ -83,8 +82,8 @@ class Shipping(models.Model):
     accept_datetime = models.DateTimeField(blank=True, null=True)
     finish_datetime = models.DateTimeField(blank=True, null=True)
     mass = models.PositiveSmallIntegerField()
-    cargo_features = models.ManyToManyField('core.CargoFeature', related_name='shippings')
+    cargo_features = models.ManyToManyField('core.CargoFeature', related_name='orders')
     sender = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='packages')
     recipient = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='parcels')
     employee = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
-    car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='shippings', blank=True, null=True)
+    car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)

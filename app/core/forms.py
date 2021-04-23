@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.forms import ValidationError
 
 # имя, фамилия, пароль, паспорт, страна, номер телефона, почта
+from app.core.models import Order
 
 
 class SignUpForm(UserCreationForm):
@@ -62,3 +63,9 @@ class SignUpClientForm(SignUpForm):
         data = self.cleaned_data
         data.pop('password2')
         return self.Meta.model.objects.create_client(**data)
+
+
+class CreateOrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('start_point', 'end_point', 'price', 'mass', 'cargo_features', 'recipient')
