@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, get_user_model
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView
 
-from app.core.forms import SignUpClientForm, LogInClientForm, SignUpEmployeeForm, LogInEmployeeForm
+from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm
 
 # Главная страница, Регистрация Клиента (имя, фамилия, пароль, паспорт, страна, номер телефона, почта),
 # Вход Клиента (номер телефона/почта, пароль), Регистрация работника (имя, фамилия, пароль, номер телефона, страна
@@ -12,7 +12,6 @@ from app.core.forms import SignUpClientForm, LogInClientForm, SignUpEmployeeForm
 # (откуда, куда, ссылка на детали, время начала и конца), Список актуальных заказов для Работника, Детали заказа (отслеживание)
 
 
-
 class MainPageView(TemplateView):
     template_name = 'core/main_page.html'
 
@@ -20,7 +19,7 @@ class MainPageView(TemplateView):
 class SignUpClientView(FormView):
     template_name = 'core/signup_client.html'
     form_class = SignUpClientForm
-    success_url = reverse_lazy('signup_client')
+    success_url = reverse_lazy('main_page')
 
     def form_valid(self, form):
         user = form.save()
@@ -28,32 +27,25 @@ class SignUpClientView(FormView):
         return super().form_valid(form)
 
 
-class LogInClientView(FormView):
-    template_name = 'core/login_client.html'
-    form_class = LogInClientForm
-    success_url = reverse_lazy('login_client')
-
+class LogInView(FormView):
+    template_name = 'core/login.html'
+    form_class = LogInForm
+    success_url = reverse_lazy('main_page')
 
     def form_valid(self, form):
-        email = form.cleaned_data.get('email')
-        phone_number = form.cleaned_data.get('phone_number')
-        password = form.cleaned_data.get('password')
-        user = authenticate(self.request, email=email, phone_number=phone_number, password=password)
-        # user = get_user_model().objects.get()
-        login(self.request, user)
+        login(self.request, form.get_user())
         return super().form_valid(form)
 
 
-class SignUpEmployeeView(CreateView):
+class SignUpEmployeeView(FormView):
     template_name = 'core/signup_employee.html'
     form_class = SignUpEmployeeForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('main_page')
 
-
-class LogInEmployeeView(FormView):
-    template_name = 'core/login_employee.html'
-    form_class = LogInEmployeeForm
-    success_url = reverse_lazy('home')
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return super().form_valid(form)
 
 
 class OrderingView(FormView):

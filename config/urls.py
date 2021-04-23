@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app.core.views import SignUpClientView, LogInClientView
+from app.core.views import SignUpClientView, LogInView, MainPageView, SignUpEmployeeView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('main_page/', MainPageView.as_view(), name='main_page'),
     path('signup_client/', SignUpClientView.as_view(), name='signup_client'),
-    path('login_client/', LogInClientView.as_view(), name='login_client'),
+    path('login/', LogInView.as_view(), name='login'),
+    path('signup_employee/', SignUpEmployeeView.as_view(), name='signup_employee'),
 ]
