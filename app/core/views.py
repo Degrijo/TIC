@@ -1,6 +1,7 @@
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, CreateOrderForm
 
@@ -14,12 +15,14 @@ from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, Crea
 
 class MainPageView(TemplateView):
     template_name = 'core/main_page.html'
+    extra_context = {'title': 'Main Page'}
 
 
 class SignUpClientView(FormView):
     template_name = 'core/signup_client.html'
     form_class = SignUpClientForm
     success_url = reverse_lazy('main_page')
+    extra_context = {'title': 'Sign Up Client'}
 
     def form_valid(self, form):
         user = form.save()
@@ -31,6 +34,7 @@ class LogInView(FormView):
     template_name = 'core/login.html'
     form_class = LogInForm
     success_url = reverse_lazy('main_page')
+    extra_context = {'title': 'Log In'}
 
     def form_valid(self, form):
         login(self.request, form.get_user())
@@ -41,6 +45,7 @@ class SignUpEmployeeView(FormView):
     template_name = 'core/signup_employee.html'
     form_class = SignUpEmployeeForm
     success_url = reverse_lazy('main_page')
+    extra_context = {'title': 'Sign Up Employee'}
 
     def form_valid(self, form):
         user = form.save()
@@ -48,8 +53,14 @@ class SignUpEmployeeView(FormView):
         return super().form_valid(form)
 
 
-class CreateOrderView(CreateView):
+class CreateOrderView(FormView, LoginRequiredMixin):
     template_name = 'core/create_order.html'
     form_class = CreateOrderForm
     success_url = reverse_lazy('main_page')
+    extra_context = {'title': 'Create Order'}
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.sender = self.request.user
+        self.object.save()
+        return super().form_valid(form)

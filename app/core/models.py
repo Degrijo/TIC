@@ -1,9 +1,11 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
-from django.contrib.gis.db.models import PointField
+from django.contrib.gis.db.models import LineStringField
 
 from django_countries.fields import CountryField
+
+from app.core.validators import PhoneNumberValidator
 
 # 3) пользователь выбирает работника, заказывает перевозку, работник забирает груз и доставляет
 # Клиент, Работник(автомобили), Свойство Груза(стекло, одежда, еда, мебель, строительные материалы, техника),
@@ -34,9 +36,11 @@ class UserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     # common
-    phone_number = models.CharField(max_length=12, unique=True)
+    phone_number = models.CharField(max_length=16, unique=True, validators=(PhoneNumberValidator,))
     country = CountryField()
     username = None
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
     CLIENT_ROLE = 1
     EMPLOYEE_ROLE = 2
@@ -75,8 +79,7 @@ class Car(models.Model):
 
 
 class Order(models.Model):
-    start_point = PointField()
-    end_point = PointField()
+    from_to_points = LineStringField()
     price = models.DecimalField(max_digits=9, decimal_places=2)
     start_datetime = models.DateTimeField(auto_now_add=True)
     accept_datetime = models.DateTimeField(blank=True, null=True)

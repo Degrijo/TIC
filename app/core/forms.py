@@ -4,25 +4,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 from django.forms import ValidationError
 
-# имя, фамилия, пароль, паспорт, страна, номер телефона, почта
 from app.core.models import Order
+
+# имя, фамилия, пароль, паспорт, страна, номер телефона, почта
 
 
 class SignUpForm(UserCreationForm):
-    first_name = forms.CharField(max_length=30, help_text='Optional.')
-    last_name = forms.CharField(max_length=30, help_text='Optional.')
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
-    phone_number = forms.CharField(max_length=12, initial='+')
-
     class Meta:
         model = get_user_model()
         fields = ('first_name', 'last_name', 'email', 'passport', 'country', 'phone_number')
-
-    def clean_phone_number(self):
-        value = self.cleaned_data.get('phone_number')
-        if not value.startswith('+'):
-            raise ValidationError('Phone number must start with +')
-        return value
 
 
 class LogInForm(forms.ModelForm):
@@ -34,7 +24,7 @@ class LogInForm(forms.ModelForm):
 
     def clean(self):
         value = self.cleaned_data.get('phone_or_email')
-        users = get_user_model().objects.filter(Q(email=value) | Q(phone_number=value[1:])).distinct()
+        users = get_user_model().objects.filter(Q(email=value) | Q(phone_number=value)).distinct()
         if users.count() != 1:
             raise ValidationError({'phone_or_email': 'No such phone or email for signed up users'})
         user = users.first()
@@ -68,4 +58,4 @@ class SignUpClientForm(SignUpForm):
 class CreateOrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('start_point', 'end_point', 'price', 'mass', 'cargo_features', 'recipient')
+        fields = ('from_to_points', 'price', 'mass', 'cargo_features', 'recipient')
