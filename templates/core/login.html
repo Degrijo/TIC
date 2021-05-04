@@ -1,37 +1,66 @@
 {% extends 'core/base.html' %}
 
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login_employee.css' %}">
+{% endblock %}
 
 {% block content %}
+
+
     <div class="container">
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-                <form class="px-4 py-3">
-                    <div class="mb-3">
-                        <label for="exampleDropdownFormEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleDropdownFormEmail1"
-                               placeholder="email@example.com">
+        <div id="login-box">
+            <div class="logo">
+                <h1 class="logo-caption"><span class="tweak">L</span>ogin</h1>
+            </div><!-- /.logo -->
+            <div class="controls">
+                {#                <input type="text" name="username" placeholder="Username" class="form-control"/>#}
+                {#                <input type="text" name="username" placeholder="Password" class="form-control"/>#}
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <div>
+                        Введите телефон или почту
+                        {{ form.phone_or_email }}
+                        {% if form.phone_or_email.errors %}
+                            <ul>
+                                {% for error in form.phone_or_email.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleDropdownFormPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleDropdownFormPassword1"
-                               placeholder="Password">
+                    <div>
+                        Введите пароль
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <ul>
+                                {% for error in form.password.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
                     </div>
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                            <label class="form-check-label" for="dropdownCheck">
-                                Remember me
-                            </label>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Sign in</button>
+                    {% if form.non_field_errors %}
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <button type="submit" class="btn btn-default btn-block btn-custom">Login</button>
                 </form>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">New around here? Sign up</a>
-                <a class="dropdown-item" href="#">Forgot password?</a>
-            </div>
-            <div class="col-2"></div>
-        </div>
-    </div>
+            </div><!-- /.controls -->
+        </div><!-- /#login-box -->
+    </div><!-- /.container -->
+    <div id="particles-js"></div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>-->
+    <script type="text/javascript" src="{% static 'js/login_employee.js' %}"></script>
 {% endblock %}

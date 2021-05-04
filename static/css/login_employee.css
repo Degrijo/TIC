@@ -8,11 +8,10 @@ body, html {
 }
 #login-box {
 	position: absolute;
-	top: 0px;
 	left: 50%;
 	transform: translateX(-50%);
 	width: 350px;
-	margin: 0 auto;
+	margin: 100px auto;
 	border: 1px solid black;
 	background: rgba(48, 46, 45, 1);
 	min-height: 250px;

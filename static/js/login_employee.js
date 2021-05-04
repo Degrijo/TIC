@@ -10,7 +10,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                     }
                 },
                 "color": {
-                    "value": "#ffffff"
+                    "value": "#000000"
                 },
                 "shape": {
                     "type": "circle",
@@ -49,7 +49,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                 "line_linked": {
                     "enable": true,
                     "distance": 150,
-                    "color": "#ffffff",
+                    "color": "#000000",
                     "opacity": 0.4,
                     "width": 1
                 },

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
@@ -44,11 +46,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     CLIENT_ROLE = 1
     EMPLOYEE_ROLE = 2
-    ROLE_TYPE = (
+    ROLE_TYPES = (
         (CLIENT_ROLE, 'Client'),
         (EMPLOYEE_ROLE, 'Employee')
     )
-    role = models.PositiveSmallIntegerField(choices=ROLE_TYPE)
+    role = models.PositiveSmallIntegerField(choices=ROLE_TYPES)
     # Client
     passport = models.CharField(max_length=9, unique=True)
     # Employee
@@ -61,13 +63,22 @@ class CustomUser(AbstractUser):
 class CargoFeature(models.Model):
     name = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.name
+
 
 class CarBrand(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 class CarType(models.Model):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
 
 
 class Car(models.Model):
@@ -79,6 +90,15 @@ class Car(models.Model):
 
 
 class Order(models.Model):
+    CREATED_TYPE = 1
+    ACCEPTED_TYPE = 2
+    FINISHED_TYPE = 3
+    STATUS_TYPES = (
+        (CREATED_TYPE, 'Created'),
+        (ACCEPTED_TYPE, 'Accepted'),
+        (FINISHED_TYPE, 'Finished')
+    )
+    status = models.PositiveSmallIntegerField(default=CREATED_TYPE, choices=STATUS_TYPES)
     from_to_points = LineStringField()
     price = models.DecimalField(max_digits=9, decimal_places=2)
     start_datetime = models.DateTimeField(auto_now_add=True)
@@ -90,3 +110,11 @@ class Order(models.Model):
     recipient = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='parcels')
     employee = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
     car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
+
+    def accept(self):
+        self.accept_datetime = datetime.now()
+        self.status = Order.ACCEPTED_TYPE
+
+    def finish(self):
+        self.finish_datetime = datetime.now()
+        self.status = Order.FINISHED_TYPE
