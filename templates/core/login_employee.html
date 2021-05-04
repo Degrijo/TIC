@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login_employee.css' %}">
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+	<div id="login-box">
+		<div class="logo">
+<!--			<img src="{% static 'images/main_page/1.jpg' %}" >-->
+			<h1 class="logo-caption"><span class="tweak">L</span>ogin</h1>
+		</div><!-- /.logo -->
+		<div class="controls">
+			<input type="text" name="username" placeholder="Username" class="form-control" />
+			<input type="text" name="username" placeholder="Password" class="form-control" />
+			<button type="button" class="btn btn-default btn-block btn-custom">Login</button>
+		</div><!-- /.controls -->
+	</div><!-- /#login-box -->
+</div><!-- /.container -->
+<div id="particles-js"></div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>-->
+<script type="text/javascript" src="{% static 'js/login_employee.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/signup_page.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div id="progress"></div>
+
+<div class="center">
+  <div id="register">
+
+    <i id="progressButton" class="ion-android-arrow-forward next"></i>
+
+    <div id="inputContainer">
+      <input id="inputField" required autofocus />
+      <label id="inputLabel"></label>
+      <div id="inputProgress"></div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script rel="script" src="{% static 'js/signup_page.js' %}"></script>
+{% endblock %}

@@ -31,7 +31,7 @@ class SignUpClientView(FormView):
 
 
 class LogInView(FormView):
-    template_name = 'core/login.html'
+    template_name = 'core/login_employee.html'
     form_class = LogInForm
     success_url = reverse_lazy('main_page')
     extra_context = {'title': 'Log In'}
