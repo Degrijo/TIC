@@ -3,12 +3,7 @@
 {% load static %}
 {% load bootstrap5 %}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/login_employee.css' %}">
-{% endblock %}
-
 {% block content %}
-    <div id="particles-js"></div>
     <form action="{% url 'login' %}" method="post" class="form">
         {% csrf_token %}
         {% bootstrap_form form %}
@@ -16,11 +11,4 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         {% endbuttons %}
     </form>
-{% endblock %}
-
-
-{% block extra_js %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>-->
-    <script type="text/javascript" src="{% static 'js/login_employee.js' %}"></script>
 {% endblock %}
