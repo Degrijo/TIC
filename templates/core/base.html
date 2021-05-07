@@ -42,19 +42,27 @@
 {#                            </li>#}
                         </ul>
                     </li>
+
                 {% endif %}
             </ul>
-            <div class="nav_greeting">
-                {% if request.user.is_authenticated %}
+            {% if request.user.is_authenticated %}
+                <div class="nav_greeting">
                     Hello, {{ request.user.first_name }}
-                {% endif %}
-            </div>
-            <a href="{% url 'login' %}">
-                <button class="btn btn-outline-light" style=" margin-right:10px;background: #FF1493">Login</button>
-            </a>
-            <a href="{% url 'signup_client' %}">
-                <button class="btn btn-outline-light" style="background: #FF1493">Sign Up</button>
-            </a>
+                </div>
+                <a href="{% url 'logout' %}">
+                    <button class="btn btn-outline-light nav_button">Logout</button>
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}">
+                    <button class="btn btn-outline-light nav_button">Login</button>
+                </a>
+                <a href="{% url 'signup_client' %}">
+                    <button class="btn btn-outline-light nav_button">Sign Up for Client</button>
+                </a>
+                <a href="{% url 'signup_employee' %}">
+                    <button class="btn btn-outline-light nav_button">Sign Up for Employee</button>
+                </a>
+            {% endif %}
         </div>
     </div>
 </nav>

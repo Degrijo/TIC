@@ -17,14 +17,14 @@ from app.core.validators import PhoneNumberValidator
 class UserManager(BaseUserManager):
     def create_client(self, first_name, last_name, email, passport, country, phone_number, password1):
         user = self.model(first_name=first_name, last_name=last_name, email=email.lower(), passport=passport,
-                          country=country, phone_number=phone_number[1:], role=self.model.CLIENT_ROLE)
+                          country=country, phone_number=phone_number, role=self.model.CLIENT_ROLE)
         user.set_password(password1)
         user.save()
         return user
 
     def create_employee(self, first_name, last_name, email, passport, country, phone_number, password1):
         user = self.model(first_name=first_name, last_name=last_name, email=email.lower(), passport=passport,
-                          country=country, phone_number=phone_number[1:], role=self.model.EMPLOYEE_ROLE)
+                          country=country, phone_number=phone_number, role=self.model.EMPLOYEE_ROLE)
         user.set_password(password1)
         user.save()
         return user

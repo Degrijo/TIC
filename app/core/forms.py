@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.gis.forms import OSMWidget, PointField
+from django.contrib.gis.forms import OSMWidget, MultiPointField
 from django.db.models import Q
 from django.forms import ValidationError
 
@@ -57,8 +57,15 @@ class SignUpClientForm(SignUpForm):
 
 
 class CreateOrderForm(forms.ModelForm):
-    from_point = PointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 3}))
+    from_to_points = MultiPointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 3}))
 
     class Meta:
         model = Order
-        fields = ('from_to_points', 'price', 'mass', 'cargo_features', 'recipient')
+        fields = ('from_to_points', 'mass', 'cargo_features', 'recipient')
+
+    def save(self, commit=True):
+        point1 = self.cleaned_data['from_to_points'][0]
+        point2 = self.cleaned_data['from_to_points'][1]
+        price = round(point1.distance(point2) * self.cleaned_data['mass'] / 1000 + len(self.cleaned_data['cargo_features']) * 100, 2)
+        self.instance.price = price
+        return super().save(commit)

@@ -1,4 +1,5 @@
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login
+from django.contrib.auth.views import LogoutView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView, ListView
@@ -54,6 +55,10 @@ class SignUpEmployeeView(FormView):
         user = form.save()
         login(self.request, user)
         return super().form_valid(form)
+
+
+class LogOutView(LogoutView):
+    next_page = reverse_lazy('main_page')
 
 
 class CreateOrderView(ClientMixin, FormView):

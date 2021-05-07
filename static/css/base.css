@@ -1,3 +1,16 @@
 .nav_greeting {
     margin-right: 10px;
 }
+
+.nav_button {
+    background: #FF1493;
+    margin-right: 10px;
+}
+
+.btn-outline-light:hover {
+    color: #8A2BE2;
+}
+
+.btn:hover {
+    color: #8A2BE2
+}
