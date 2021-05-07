@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.gis.forms import OSMWidget, PointField
 from django.db.models import Q
 from django.forms import ValidationError
 
@@ -56,6 +57,8 @@ class SignUpClientForm(SignUpForm):
 
 
 class CreateOrderForm(forms.ModelForm):
+    from_point = PointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 3}))
+
     class Meta:
         model = Order
         fields = ('from_to_points', 'price', 'mass', 'cargo_features', 'recipient')

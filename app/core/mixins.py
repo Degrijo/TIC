@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
+from django.contrib.auth.mixins import AccessMixin
 from django.urls import reverse_lazy
 
 
@@ -29,6 +29,8 @@ class ParticipantMixin(AccessMixin):
 
     def dispatch(self, request, *args, **kwargs):
         object = self.model
-        if not request.user.is_authenticated or (request.user != object.sender and request.user != object.sender):
+        if not request.user.is_authenticated or (request.user != object.sender
+                                                 and request.user != object.recipient
+                                                 and request.user != object.employee):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)

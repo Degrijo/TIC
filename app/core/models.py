@@ -2,11 +2,10 @@ from datetime import datetime
 
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.gis.db.models import MultiPointField
 from django.db import models
-from django.contrib.gis.db.models import LineStringField
 
 from django_countries.fields import CountryField
-
 from app.core.validators import PhoneNumberValidator
 
 # 3) пользователь выбирает работника, заказывает перевозку, работник забирает груз и доставляет
@@ -89,6 +88,12 @@ class Car(models.Model):
     lifting = models.PositiveSmallIntegerField()
 
 
+class CountryCoordinates(models.Model):
+    iso = models.CharField(max_length=2)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+
+
 class Order(models.Model):
     CREATED_TYPE = 1
     ACCEPTED_TYPE = 2
@@ -99,7 +104,7 @@ class Order(models.Model):
         (FINISHED_TYPE, 'Finished')
     )
     status = models.PositiveSmallIntegerField(default=CREATED_TYPE, choices=STATUS_TYPES)
-    from_to_points = LineStringField()
+    from_to_points = MultiPointField()
     price = models.DecimalField(max_digits=9, decimal_places=2)
     start_datetime = models.DateTimeField(auto_now_add=True)
     accept_datetime = models.DateTimeField(blank=True, null=True)
