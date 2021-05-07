@@ -2,63 +2,73 @@
 
 
 {% block content %}
-<!--    <form action="{% url 'signup_client' %}" method="post">-->
-<!--        {% csrf_token %}-->
-<!--        {{ form }}-->
-<!--        <input type="submit" value="Submit">-->
-<!--    </form>-->
+<!--<link rel="stylesheet" href="signup_client.css">-->
+<!--<link rel="stylesheet" href="signup_client.js">-->
+<!--<div class="container">-->
+<!--	<div id="login-box">-->
+<!--		<div class="logo">-->
+<!--			<h1 class="logo-caption"><span class="tweak">L</span>ogin</h1>-->
+<!--		</div>&lt;!&ndash; /.logo &ndash;&gt;-->
+<!--		<div class="controls">-->
+<!--			<input type="text" name="username" placeholder="Username" class="form-control" />-->
+<!--			<input type="text" name="username" placeholder="Password" class="form-control" />-->
+<!--			<button type="button" class="btn btn-default btn-block btn-custom">Login</button>-->
+<!--		</div>&lt;!&ndash; /.controls &ndash;&gt;-->
+<!--	</div>&lt;!&ndash; /#login-box &ndash;&gt;-->
+<!--</div>&lt;!&ndash; /.container &ndash;&gt;-->
+<div id="particles-js"></div>
     <div class="container">
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
                 <form class="px-4 py-3">
                     <div class="mb=3">
-                        <label for="Name" class="form-label">First name</label>
+                        <label for="Name" class="form-label">Имя</label>
                         <input type="Name" class="form-control" id="Name">
                     </div>
                     <div class="mb=3">
-                        <label for="Surname" class="form-label">Last name</label>
+                        <label for="Surname" class="form-label">Фамилия</label>
                         <input type="Surname" class="form-control" id="Surname">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleDropdownFormEmail1" class="form-label">Email address</label>
+                        <label for="exampleDropdownFormEmail1" class="form-label">Электронная почта</label>
                         <input type="email" class="form-control" id="exampleDropdownFormEmail1"
                                placeholder="email@example.com">
                     </div>
                     <div class="mb=3">
-                        <label for="Passport" class="form-label">Passport</label>
+                        <label for="Passport" class="form-label">Паспорт</label>
                         <input type="Passport" class="form-control" id="Passport"
                                placeholder=AA10098386>
                     </div>
                     <div class="mb-3">
                         <div class="form-group has-float-label">
-                            <label for="country" class="form-label">Country</label>
+                            <label for="country" class="form-label">Страна</label>
                             <select class="form-select custom-select " id="country">
-                                <option selected>Choose your country...</option>
-                                <option value="1">Belarus</option>
-                                <option value="2">Russia</option>
-                                <option value="3">Uzbekistan</option>
-                                <option value="4">Kazakhstan</option>
-                                <option value="5">Ukraine</option>
+                                <option selected>Выберите свою страну...</option>
+                                <option value="1">Беларусь</option>
+                                <option value="2">Россия</option>
+                                <option value="3">Узбекистан</option>
+                                <option value="4">Казахстан</option>
+                                <option value="5">Украина</option>
                             </select>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleDropdownFormEmail1" class="form-label">Phone number</label>
+                        <label for="exampleDropdownFormEmail1" class="form-label">Номер телефона</label>
                         <input type="email" class="form-control" id="phone number"
                                placeholder="+375289482299">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleDropdownFormPassword1" class="form-label">Password</label>
+                        <label for="exampleDropdownFormPassword1" class="form-label">Пароль</label>
                         <input type="password" class="form-control" id="exampleDropdownFormPassword1"
-                               placeholder="Password">
+                               placeholder="Пароль">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleDropdownFormPassword1" class="form-label">Password confirmation</label>
+                        <label for="exampleDropdownFormPassword1" class="form-label">Подтвердите пароль</label>
                         <input type="password" class="form-control" id="exampleDropdownFormPassword2"
-                               placeholder="Password">
+                               placeholder="Пароль">
                     </div>
-                    <button class="btn btn-outline-warning" type="submit" class="btn btn-primary" >Register</button>
+                    <button class="btn btn-outline-warning" type="submit" class="btn btn-primary" >Регистация</button>
                 </form>
                 <div class="dropdown-divider"></div>
 <!--                <a class="dropdown-item" href="#">New around here? Sign up</a>-->

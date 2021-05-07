@@ -1,110 +1,78 @@
-body{
-  margin: 0;
-  background: #c4dce8; /*ff*/
-  font-family: 'Roboto', sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Poiret+One');
+
+body, html {
+	height: 100%;
+	background-repeat: no-repeat;    /*background-image: linear-gradient(rgb(12, 97, 33),rgb(104, 145, 162));*/
+	background:black;
+	position: relative;
 }
-
-h1 {
-  position: relative;
-  color: #fff;
-  opacity: 0;
-  transition: .8s ease-in-out;
+#login-box {
+	position: absolute;
+	top: 0px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 350px;
+	margin: 0 auto;
+	border: 1px solid black;
+	background: rgba(48, 46, 45, 1);
+	min-height: 250px;
+	padding: 20px;
+	z-index: 9999;
 }
-
-#progress {
-  position: absolute;
-  background: #79aec8;   /*cc*/
-  height: 100vh;
-  width: 0;
-  transition: width 0.2s ease-in-out;
+#login-box .logo .logo-caption {
+	font-family: 'Poiret One', cursive;
+	color: white;
+	text-align: center;
+	margin-bottom: 0px;
 }
-
-.center {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#login-box .logo .tweak {
+	color: #ff5252;
 }
-
-/******
-  Form
- ******/
-
-#register {
-  background: #fff;
-  position: relative;
-  width: 410px;
-  padding: 2px 15px 20px 15px;
-  box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.3);
-  transition: transform .1s ease-in-out;
+#login-box .controls {
+	padding-top: 30px;
 }
-
-#register.close {
-  width: 0;
-  padding: 0;
-  overflow: hidden;
-  transition: .8s ease-in-out;
-  box-shadow: 0 16px 24px 2px rgba(0,0,0,0);
+#login-box .controls input {
+	border-radius: 0px;
+	background: rgb(98, 96, 96);
+	border: 0px;
+	color: white;
+	font-family: 'Nunito', sans-serif;
 }
-
-.next {
-  position: absolute;
-  right: 20px;
-  bottom: 10px;
-  font-size: 40px;
-  color: #5b80b2; /*ba*/
-  float: right;
-  cursor: pointer;
+#login-box .controls input:focus {
+	box-shadow: none;
 }
-.next:hover {color: #333}
-.wrong .next {color: #c4dce8} /*ff*/
-.close .next {color: #fff}
-
-#inputContainer {
-  position: relative;
-  opacity: 0;
-  width: 350px;
-  margin-top: 25px;
-  transition: opacity .3s ease-in-out;
+#login-box .controls input:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
 }
-
-#inputContainer input {
-  width: 100%;
-  padding: 0 5px;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  outline: 0;
-  background: transparent;
-  box-shadow:none;
+#login-box .controls input:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
 }
-
-#inputLabel {
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 0 5px;
-  transition: .2s ease-in-out;
+#login-box button.btn-custom {
+	border-radius: 2px;
+	margin-top: 8px;
+	background:#ff5252;
+	border-color: rgba(48, 46, 45, 1);
+	color: white;
+	font-family: 'Nunito', sans-serif;
 }
-
-#inputContainer input:valid + #inputLabel {
-  top: -15px;
-  font-size: 11px;
-  font-weight: normal;
-  color: #9e9e9e;
+#login-box button.btn-custom:hover{
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	transition: all 500ms ease;
+	background: rgba(48, 46, 45, 1);
+	border-color: #ff5252;
 }
-
-#inputProgress {
-  position: absolute;
-  border-bottom: 2px solid #5b80b2; /*ba*/
-  padding: 3px 0;
-  width: 0;
-  transition: width .6s ease-in-out;
-}
-
-.wrong #inputProgress {
-  border-color: #c4dce8; /*ff*/
+#particles-js{
+  	width: 100%;
+  	height: 100%;
+  	background-size: cover;
+  	background-position: 50% 50%;
+  	position: fixed;
+  	top: 0px;
+  	z-index:1;
 }
