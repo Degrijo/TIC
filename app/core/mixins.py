@@ -28,7 +28,7 @@ class ParticipantMixin(AccessMixin):
     permission_denied_message = 'Order details available only for participants'
 
     def dispatch(self, request, *args, **kwargs):
-        object = self.model
+        object = self.get_object()
         if not request.user.is_authenticated or (request.user != object.sender
                                                  and request.user != object.recipient
                                                  and request.user != object.employee):

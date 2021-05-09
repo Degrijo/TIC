@@ -74,13 +74,17 @@ class CreateOrderView(ClientMixin, FormView):
         return super().form_valid(form)
 
 
-class ListMyOrdersView(ClientMixin, ListView):
+class ListMyOrdersView(ClientMixin, TemplateView):
     template_name = 'core/list_my_orders.html'
     extra_context = {'title': 'Список заказов'}
     ordering = '-start_datetime'
 
-    def get_queryset(self):
-        return Order.objects.filter(sender=self.request.user)
+    def get_context_data(self, **kwargs):
+        orders = Order.objects.filter(sender=self.request.user).order_by(self.ordering)
+        kwargs['created'] = orders.filter(status=Order.CREATED_TYPE)
+        kwargs['accepted'] = orders.filter(status=Order.ACCEPTED_TYPE)
+        kwargs['finished'] = orders.filter(status=Order.FINISHED_TYPE)
+        return super().get_context_data(**kwargs)
 
 
 class ListActualOrdersView(EmployeeMixin, ListView, SingleObjectMixin):

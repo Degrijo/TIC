@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from app.core.views import SignUpClientView, LogInView, MainPageView, SignUpEmployeeView, CreateOrderView, \
-    ListMyOrdersView, LogOutView
+    ListMyOrdersView, LogOutView, DetailOrderView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +29,6 @@ urlpatterns = [
     path('login/', LogInView.as_view(), name='login'),
     path('create_order/', CreateOrderView.as_view(), name='create_order'),
     path('list_my_orders/', ListMyOrdersView.as_view(), name='list_my_orders'),
-    path('logout/', LogOutView.as_view(), name='logout')
+    path('logout/', LogOutView.as_view(), name='logout'),
+    path('order/<int:pk>/', DetailOrderView.as_view(), name='detail_order')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
