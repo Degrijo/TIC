@@ -10,24 +10,25 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                     }
                 },
                 "color": {
-                    "value": "#000000"
+                    "value": "#ffffff"
                 },
                 "shape": {
-                    "type": "circle",
+                    "type": "star",
                     "stroke": {
-                        "width": 0,
-                        "color": "#000000"
+                        "width": 3,
+                        "color": "#ac3cb3"
                     },
                     "polygon": {
                         "nb_sides": 5
                     },
                     "image": {
+                        "src": "img/github.svg",
                         "width": 100,
                         "height": 100
                     }
                 },
                 "opacity": {
-                    "value": 0.5,
+                    "value": 0.5050747991726396,
                     "random": false,
                     "anim": {
                         "enable": false,
@@ -37,7 +38,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                     }
                 },
                 "size": {
-                    "value": 5,
+                    "value": 4.008530152163807,
                     "random": true,
                     "anim": {
                         "enable": false,
@@ -49,17 +50,18 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                 "line_linked": {
                     "enable": true,
                     "distance": 150,
-                    "color": "#000000",
-                    "opacity": 0.4,
-                    "width": 1
+                    "color": "#ac3cb3",
+                    "opacity": 0.5,
+                    "width": 2.4051180912982844
                 },
                 "move": {
                     "enable": true,
-                    "speed": 6,
-                    "direction": "none",
+                    "speed": 2,
+                    "direction": "bottom",
                     "random": false,
                     "straight": false,
                     "out_mode": "out",
+                    "bounce": false,
                     "attract": {
                         "enable": false,
                         "rotateX": 600,
@@ -72,7 +74,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                 "events": {
                     "onhover": {
                         "enable": true,
-                        "mode": "repulse"
+                        "mode": "grab"
                     },
                     "onclick": {
                         "enable": true,
@@ -95,7 +97,8 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                         "speed": 3
                     },
                     "repulse": {
-                        "distance": 200
+                        "distance": 200,
+                        "duration": 0.4
                     },
                     "push": {
                         "particles_nb": 4
@@ -105,15 +108,7 @@ $.getScript("https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles
                     }
                 }
             },
-            "retina_detect": true,
-            "config_demo": {
-                "hide_card": false,
-                "background_color": "#b61924",
-                "background_image": "",
-                "background_position": "50% 50%",
-                "background_repeat": "no-repeat",
-                "background_size": "cover"
-            }
+            "retina_detect": true
         }
     );
 

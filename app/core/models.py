@@ -126,7 +126,7 @@ class Order(models.Model):
         string = self.start_datetime.strftime(DATETIME_FORMAT)
         if self.status == Order.FINISHED_TYPE:
             string += ' -> ' + self.finish_datetime.strftime(DATETIME_FORMAT)
-        string += f' {self.price}'
+        string += f' - {self.price} BYN'
         return string
 
     @property
