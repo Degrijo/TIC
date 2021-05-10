@@ -123,7 +123,7 @@ class Order(models.Model):
     car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
 
     def __str__(self):
-        string = self.start_datetime.strftime(DATETIME_FORMAT)
+        string = f'Order № {self.id} - {self.start_datetime.strftime(DATETIME_FORMAT)}'
         if self.status == Order.FINISHED_TYPE:
             string += ' -> ' + self.finish_datetime.strftime(DATETIME_FORMAT)
         string += f' - {self.price} BYN'

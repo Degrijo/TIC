@@ -3,19 +3,17 @@
 {% load static %}
 
 {% block content %}
-<h1 xmlns="http://www.w3.org/1999/html">Spisok zakazov</h1>
+<h1 xmlns="http://www.w3.org/1999/html">Order list</h1>
 <ul>
     {% for order in object_list %}
     <div class="list-order">
         <a href="{% url 'detail_order' pk=order.id %}" class="list-group-item list-group-item-action " aria-current="true">
             <div class="d-flex w-100 justify-content-between">
-                <!--            <li>{{order.status }} - {{ order.start_datetime }} - {{ order.finish_datetime }} - {{ order.price }}</li>-->
                 <h5 class="mb-1">
-                    <li> {{ order }}
-                    </li>
+                    <li> {{ order }} </li>
                 </h5>
                 <small>
-                    <li><span class="dot" style="background-color: {{order.color }}"></span></li>
+                    <span class="dot" style="background-color: {{ order.color }}"></span>
                 </small>
             </div>
             <p class="mb-1"></p>
@@ -23,6 +21,7 @@
         </a>
     </div>
     {% empty %}
-    <li>No order yet.</li>
+    No orders yet.
     {% endfor %}
-    {% endblock %}
+</ul>
+{% endblock %}
