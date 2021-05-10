@@ -3,6 +3,23 @@
 {% load static %}
 
 {% block content %}
-    {{ object }}
-    <p>Start date: {{ object.start_datetime }}</p>
+<div class="card text-center">
+  <div class="card-header">
+    Detdails
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+    <p>Price: {{ object.price }} BYN</p>
+    <p>Start date: {{ object.start_datetime }}</p></p>
+    <p>Sender: {{object.sender}}</p>
+    <p>Recipient: {{object.recipient}}</p>
+    <p>Mass : {{object.mass}} kg</p>
+    <p>Features: {% for feature in object.cargo_features.all %}
+      {{feature.name}},
+      {% endfor %}
+
+    </p>
+
+</div>
+
 {% endblock %}

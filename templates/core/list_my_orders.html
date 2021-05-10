@@ -3,25 +3,51 @@
 {% load static %}
 
 {% block content %}
-<h1 xmlns="http://www.w3.org/1999/html">Order list</h1>
 <ul>
     {% for order in object_list %}
-    <div class="list-order">
-        <a href="{% url 'detail_order' pk=order.id %}" class="list-group-item list-group-item-action " aria-current="true">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">
-                    <li> {{ order }} </li>
-                </h5>
-                <small>
-                    <span class="dot" style="background-color: {{ order.color }}"></span>
-                </small>
-            </div>
-            <p class="mb-1"></p>
-            <small></small>
-        </a>
+    <div class="card text-center">
+        <div class="card-header">
+            <P1>ORDER</P1>
+        </div>
+        <div class="card-body ">
+            <h5 class="card-title mb-1">
+                <a> {{ order }}</a>
+            </h5>
+            <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
+<!--            <h5 class="mb-1">-->
+<!--                <h5><small><span class="dot" style="background-color: {{ order.color }}"></span></small></h5>-->
+<!--            </h5>-->
+        </div>
+        <div class="card-footer text-muted">
+
+        </div>
+
     </div>
-    {% empty %}
-    No orders yet.
     {% endfor %}
 </ul>
+<!--<h1 xmlns="http://www.w3.org/1999/html">Order list</h1>-->
+<!--<ul>-->
+<!--    {% for order in object_list %}-->
+<!--    <table class="table table-striped">-->
+<!--        <div class="list-order">-->
+<!--            <a href="{% url 'detail_order' pk=order.id %}" class="list-group-item list-group-item-action "-->
+<!--               aria-current="true">-->
+<!--                <div class="d-flex w-100 justify-content-between">-->
+<!--                    <h5 class="mb-1">-->
+<!--                        <li> {{ order }}</li>-->
+<!--                    </h5>-->
+<!--                    <small>-->
+<!--                        <span class="dot" style="background-color: {{ order.color }}"></span>-->
+<!--                    </small>-->
+<!--                </div>-->
+<!--                <p class="mb-1"></p>-->
+<!--                <small></small>-->
+<!--            </a>-->
+<!--        </div>-->
+
+<!--        {% empty %}-->
+<!--        No orders yet.-->
+<!--        {% endfor %}-->
+<!--    </table>-->
+<!--</ul>-->
 {% endblock %}
