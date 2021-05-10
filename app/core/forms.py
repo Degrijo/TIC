@@ -1,13 +1,11 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.gis.forms import OSMWidget, MultiPointField
+from django.contrib.gis.forms import MultiPointField, OSMWidget
 from django.db.models import Q
 from django.forms import ValidationError
 
 from app.core.models import Order
-
-# имя, фамилия, пароль, паспорт, страна, номер телефона, почта
 
 
 class SignUpForm(UserCreationForm):
@@ -57,11 +55,17 @@ class SignUpClientForm(SignUpForm):
 
 
 class CreateOrderForm(forms.ModelForm):
-    from_to_points = MultiPointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 3}))
+    from_to_points = MultiPointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 7}))
 
     class Meta:
         model = Order
         fields = ('from_to_points', 'mass', 'cargo_features', 'recipient')
+
+    def clean_from_to_points(self):
+        value = self.cleaned_data['from_to_points']
+        if len(value) < 2:
+            raise ValidationError('Order must has 2 points on map')
+        return value
 
     def save(self, commit=True):
         point1 = self.cleaned_data['from_to_points'][0]

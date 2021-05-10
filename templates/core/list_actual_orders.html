@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+
+
+{% block content %}
+<ul>
+    {% for order in object_list %}
+    <div class="card text-center mb-3">
+        <div class="card-header">
+            <P1>ORDER № {{ order.id }}</P1>
+        </div>
+        <div class="card-body">
+            <a> {{ order }}</a>
+            <a href="{% url 'accept_order' pk=order.id %}" class="btn btn-primary ">Accept order</a>
+        </div>
+    </div>
+    {% endfor %}
+</ul>
+    {% endblock %}

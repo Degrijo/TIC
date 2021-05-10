@@ -29,17 +29,17 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'main_page' %}" style="color: white">Home</a>
                 </li>
                 {% if request.user.is_authenticated %}
-                    {% if request.user.role == 1 %}
-
-
-                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
                             Orders
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'create_order' %}" style="color: #8A2BE2">Create order</a></li>
+                            {% if request.user.role == user_model.CLIENT_ROLE %}
+                                <li><a class="dropdown-item" href="{% url 'create_order' %}" style="color: #8A2BE2">Create order</a></li>
+                            {% elif request.user.role == user_model.EMPLOYEE_ROLE %}
+                                <li><a class="dropdown-item" href="{% url 'list_actual_orders' %}" style="color: #8A2BE2">List actual orders</a></li>
+                            {% endif %}
                             <li><a class="dropdown-item" href="{% url 'list_my_orders' %}" style="color: #8A2BE2">List my orders</a></li>
 {#                            <li>#}
 {#                                <hr class="dropdown-divider">#}
@@ -91,7 +91,7 @@
         integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
         crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script type="text/javascript" src="{% static 'js/login_employee.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 {% block extra_js %}
 
 {% endblock %}

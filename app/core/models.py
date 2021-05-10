@@ -59,6 +59,11 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
     objects = UserManager()
 
+    @property
+    def country_coordinates(self):
+        coors = CountryCoordinates.objects.get(iso=self.country.code)
+        return coors.latitude, coors.longitude
+
 
 class CargoFeature(models.Model):
     name = models.CharField(max_length=256)
@@ -87,6 +92,9 @@ class Car(models.Model):
     type = models.ForeignKey('core.CarType', on_delete=models.CASCADE, related_name='cars')
     brand = models.ForeignKey('core.CarBrand', on_delete=models.CASCADE, related_name='cars')
     lifting = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return f'{self.brand} {self.type} {self.number}'
 
 
 class CountryCoordinates(models.Model):
@@ -123,8 +131,10 @@ class Order(models.Model):
     car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
 
     def __str__(self):
-        string = f'Order № {self.id} - {self.start_datetime.strftime(DATETIME_FORMAT)}'
-        if self.status == Order.FINISHED_TYPE:
+        string = f'{self.start_datetime.strftime(DATETIME_FORMAT)}'
+        if self.accept_datetime:
+            string += ' -> ' + self.accept_datetime.strftime(DATETIME_FORMAT)
+        if self.finish_datetime:
             string += ' -> ' + self.finish_datetime.strftime(DATETIME_FORMAT)
         string += f' - {self.price} BYN'
         return string
@@ -135,16 +145,13 @@ class Order(models.Model):
 
     @property
     def types(self):
-        final = {}
+        final = []
         types = dict(Order.STATUS_TYPES)
         for number, color in Order.STATUS_COLORS:
-            final[color] = types[number]
+            final.append((color, types[number]))
         return final
-
-    def accept(self):
-        self.accept_datetime = datetime.now()
-        self.status = Order.ACCEPTED_TYPE
 
     def finish(self):
         self.finish_datetime = datetime.now()
         self.status = Order.FINISHED_TYPE
+        self.save()

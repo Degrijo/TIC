@@ -3,51 +3,33 @@
 {% load static %}
 
 {% block content %}
+<div class="color_block">
+{% for color, type in order_model.types %}
+    <span class="dot" style="background-color: {{ color }}"></span> - {{ type }}
+{% endfor %}
+</div>
 <ul>
     {% for order in object_list %}
-    <div class="card text-center">
+    <div class="card text-center mb-3">
         <div class="card-header">
-            <P1>ORDER</P1>
+            <P1>ORDER № {{ order.id }}</P1>
         </div>
-        <div class="card-body ">
-            <h5 class="card-title mb-1">
-                <a> {{ order }}</a>
-            </h5>
+        <div class="card-body">
+            <div class="container mb-3">
+                <div class="row">
+                    <div class="col-8">
+                        <h5 class="card-title">
+                            <a> {{ order }}</a>
+                        </h5>
+                    </div>
+                    <div class="col-4">
+                        <span class="dot" style="background-color: {{ order.color }}"></span>
+                    </div>
+                </div>
+            </div>
             <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
-<!--            <h5 class="mb-1">-->
-<!--                <h5><small><span class="dot" style="background-color: {{ order.color }}"></span></small></h5>-->
-<!--            </h5>-->
         </div>
-        <div class="card-footer text-muted">
-
-        </div>
-
     </div>
     {% endfor %}
 </ul>
-<!--<h1 xmlns="http://www.w3.org/1999/html">Order list</h1>-->
-<!--<ul>-->
-<!--    {% for order in object_list %}-->
-<!--    <table class="table table-striped">-->
-<!--        <div class="list-order">-->
-<!--            <a href="{% url 'detail_order' pk=order.id %}" class="list-group-item list-group-item-action "-->
-<!--               aria-current="true">-->
-<!--                <div class="d-flex w-100 justify-content-between">-->
-<!--                    <h5 class="mb-1">-->
-<!--                        <li> {{ order }}</li>-->
-<!--                    </h5>-->
-<!--                    <small>-->
-<!--                        <span class="dot" style="background-color: {{ order.color }}"></span>-->
-<!--                    </small>-->
-<!--                </div>-->
-<!--                <p class="mb-1"></p>-->
-<!--                <small></small>-->
-<!--            </a>-->
-<!--        </div>-->
-
-<!--        {% empty %}-->
-<!--        No orders yet.-->
-<!--        {% endfor %}-->
-<!--    </table>-->
-<!--</ul>-->
 {% endblock %}

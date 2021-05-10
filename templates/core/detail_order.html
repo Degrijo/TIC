@@ -5,21 +5,36 @@
 {% block content %}
 <div class="card text-center">
   <div class="card-header">
-    Detdails
+    Details
   </div>
   <div class="card-body">
     <p class="card-text">
     <p>Price: {{ object.price }} BYN</p>
-    <p>Start date: {{ object.start_datetime }}</p></p>
+    <p>Start date: {{ object.start_datetime }}</p>
+    {% if object.accept_datetime %}
+        <p>Accept date: {{ object.accept_datetime }}</p>
+    {% endif %}
+    {% if object.finish_datetime %}
+        <p>Finish date: {{ object.finish_datetime }}</p>
+    {% endif %}
     <p>Sender: {{object.sender}}</p>
     <p>Recipient: {{object.recipient}}</p>
+    {% if object.employee %}
+      <p>Employee: {{ object.employee }}</p>
+    {% endif %}
+    {% if object.car %}
+      <p>Car: {{ object.car }}</p>
+    {% endif %}
     <p>Mass : {{object.mass}} kg</p>
-    <p>Features: {% for feature in object.cargo_features.all %}
-      {{feature.name}},
-      {% endfor %}
-
-    </p>
-
+    {% if object.cargo_features.all %}
+        <p>Features: {% for feature in object.cargo_features.all %}
+          {{feature.name}}{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        </p>
+    {% else %}
+        <p>No features provided</p>
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}
