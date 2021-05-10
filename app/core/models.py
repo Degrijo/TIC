@@ -12,6 +12,7 @@ from app.core.validators import PhoneNumberValidator
 # Клиент, Работник(автомобили), Свойство Груза(стекло, одежда, еда, мебель, строительные материалы, техника),
 # Автомобиль (номер, тип, грузоподъемность), Тип Авто (газель, фура)
 # Перевозка(откуда, куда, цена, время принятия заказы, время завершения заказа, груз, клиент1, клиент2, работник, автомобиль, масса и свойста груза)
+from config.settings.common import DATETIME_FORMAT
 
 
 class UserManager(BaseUserManager):
@@ -98,12 +99,17 @@ class Order(models.Model):
     CREATED_TYPE = 1
     ACCEPTED_TYPE = 2
     FINISHED_TYPE = 3
+    STATUS_COLORS = (
+        (CREATED_TYPE, '#0022FF'),
+        (ACCEPTED_TYPE, '#FFFF00'),
+        (FINISHED_TYPE, '#11FF00')
+    )
     STATUS_TYPES = (
         (CREATED_TYPE, 'Created'),
         (ACCEPTED_TYPE, 'Accepted'),
         (FINISHED_TYPE, 'Finished')
     )
-    status = models.PositiveSmallIntegerField(default=CREATED_TYPE, choices=STATUS_TYPES)
+    status = models.PositiveSmallIntegerField(default=CREATED_TYPE)
     from_to_points = MultiPointField()
     price = models.DecimalField(max_digits=9, decimal_places=2)
     start_datetime = models.DateTimeField(auto_now_add=True)
@@ -115,6 +121,25 @@ class Order(models.Model):
     recipient = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='parcels')
     employee = models.ForeignKey('core.CustomUser', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
     car = models.ForeignKey('core.Car', on_delete=models.CASCADE, related_name='orders', blank=True, null=True)
+
+    def __str__(self):
+        string = self.start_datetime.strftime(DATETIME_FORMAT)
+        if self.status == Order.FINISHED_TYPE:
+            string += ' -> ' + self.finish_datetime.strftime(DATETIME_FORMAT)
+        string += f' {self.price}'
+        return string
+
+    @property
+    def color(self):
+        return dict(Order.STATUS_COLORS).get(self.status)
+
+    @property
+    def types(self):
+        final = {}
+        types = dict(Order.STATUS_TYPES)
+        for number, color in Order.STATUS_COLORS:
+            final[color] = types[number]
+        return final
 
     def accept(self):
         self.accept_datetime = datetime.now()

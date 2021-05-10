@@ -3,7 +3,7 @@
 {% block content %}
     <p>Created orders</p>
     {% for object in created %}
-        <a href="{% url 'detail_order' pk=object.id %}">{{ object.start_datetime }} {{ object.price }} BYN</a>
+        <a href="{% url 'detail_order' pk=object.id %}">{{ object }}</a>
     {% empty %}
         <p>No suh orders yet</p>
     {% endfor %}
