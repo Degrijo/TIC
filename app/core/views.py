@@ -1,24 +1,16 @@
-import asyncio
 from datetime import datetime
 
-import schedule
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.views import LogoutView
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, FormView, TemplateView, ListView, UpdateView
 from django.views.generic.detail import DetailView
 
 from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, CreateOrderForm
 from app.core.mixins import EmployeeMixin, ClientMixin, ParticipantMixin, ContextMixin
-
-# Главная страница, Регистрация Клиента (имя, фамилия, пароль, паспорт, страна, номер телефона, почта),
-# Вход Клиента (номер телефона/почта, пароль), Регистрация работника (имя, фамилия, пароль, номер телефона, страна
-# почта), Вход работника (номер телефона/почта, пароль), # Личный кабинет (имя, фамилия, страна,
-# заказы с деталями),
-# Оформление заказа для Клиента (типы грузов, масса, начальная и конечная точки), Список прошлых заказов Клиента
-# (откуда, куда, ссылка на детали, время начала и конца), Список актуальных заказов для Работника, Детали заказа (отслеживание)
 from app.core.models import Car, Order
 
 
@@ -151,17 +143,14 @@ class ListCarsView(ContextMixin, EmployeeMixin, ListView):
     extra_context = {'title': 'List cars'}
 
 
-class FinishOrderView(ContextMixin, EmployeeMixin, ParticipantMixin, UpdateView):
-    template_name = 'core/bootstrap_form.html'
+class FinishOrderView(EmployeeMixin, ParticipantMixin, View):
     model = Order
-    fields = ()
     success_url = reverse_lazy('list_my_orders')
-    extra_context = {'title': 'Finish order'}
+    object = None
 
-    def form_valid(self, form):
-        self.object = form.save()
+    def get(self, request, *args, **kwargs):
         self.object.status = Order.FINISHED_TYPE
-        self.object.finished_datetime = datetime.now()
+        self.object.finish_datetime = datetime.now()
         self.object.save()
         # send_mail()
-        return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.success_url)

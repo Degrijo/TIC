@@ -26,14 +26,18 @@
                         <span class="dot" style="background-color: {{ order.color }}"></span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-6">
-                        <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
+                {% if request.user.role == user_model.CLIENT_ROLE or order.status == order_model.FINISHED_TYPE %}
+                    <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
+                {% else %}
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'finish_order' pk=order.id %}" class="btn btn-primary ">Finish order</a>
+                        </div>
                     </div>
-                    <div class="col-6">
-                        <a href="{% url 'finish_order' pk=order.id %}" class="btn btn-primary ">Finish order</a>
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>
