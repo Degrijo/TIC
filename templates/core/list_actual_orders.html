@@ -11,7 +11,17 @@
         </div>
         <div class="card-body">
             <a> {{ order }}</a>
-            <a href="{% url 'accept_order' pk=order.id %}" class="btn btn-primary ">Accept order</a>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Detail order</a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'accept_order' pk=order.id %}" class="btn btn-primary ">Accept order</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     {% endfor %}

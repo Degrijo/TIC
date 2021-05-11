@@ -41,15 +41,21 @@
                                 <li><a class="dropdown-item" href="{% url 'list_actual_orders' %}" style="color: #8A2BE2">List actual orders</a></li>
                             {% endif %}
                             <li><a class="dropdown-item" href="{% url 'list_my_orders' %}" style="color: #8A2BE2">List my orders</a></li>
-{#                            <li>#}
-{#                                <hr class="dropdown-divider">#}
-{#                            </li>#}
                         </ul>
                     </li>
-
-                {% endif %}
-            </ul>
-            {% if request.user.is_authenticated %}
+                    {% if request.user.role == user_model.EMPLOYEE_ROLE %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false" style="color: white">
+                                Cars
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'create_car' %}" style="color: #8A2BE2">Create car</a></li>
+                                <li><a class="dropdown-item" href="{% url 'list_cars' %}" style="color: #8A2BE2">List cars</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
                 <div class="nav_greeting">
                     Hello, {{ request.user.first_name }}
                 </div>
@@ -57,6 +63,7 @@
                     <button class="btn btn-outline-light nav_button">Logout</button>
                 </a>
             {% else %}
+                </ul>
                 <a href="{% url 'login' %}">
                     <button class="btn btn-outline-light nav_button">Login</button>
                 </a>

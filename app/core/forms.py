@@ -16,6 +16,10 @@ class SignUpForm(UserCreationForm):
 
 class LogInForm(forms.ModelForm):
     phone_or_email = forms.CharField()
+    password = forms.CharField(
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'})
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,7 +59,7 @@ class SignUpClientForm(SignUpForm):
 
 
 class CreateOrderForm(forms.ModelForm):
-    from_to_points = MultiPointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 7}))
+    from_to_points = MultiPointField(widget=OSMWidget(attrs={'map_width': 800, 'map_height': 500, 'default_zoom': 4}))
 
     class Meta:
         model = Order

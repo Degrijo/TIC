@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 
-{#{% load bootstrap5 %}#}
+{% load bootstrap5 %}
 {% load static %}
 
 {% block extra_css %}
@@ -8,12 +8,21 @@
 {% endblock %}
 
 {% block content %}
-    <form action="{% url 'create_order' %}" method="post" class="form">
+    <form method="post" class="form">
         {% csrf_token %}
-{#        {% bootstrap_form form %}#}
-{#        {% buttons %}#}
-        {{ form }}
+        {{ form.from_to_points }}
+        {% if form.from_to_points.errors %}
+            <ul>
+            {% for error in form.from_to_points.errors %}
+                <li class="error_field">{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% bootstrap_field form.mass %}
+        {% bootstrap_field form.cargo_features %}
+        {% bootstrap_field form.recipient %}
+        {% buttons %}
             <button type="submit" class="btn btn-primary">Submit</button>
-{#        {% endbuttons %}#}
+        {% endbuttons %}
     </form>
 {% endblock %}

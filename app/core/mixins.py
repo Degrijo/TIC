@@ -34,3 +34,9 @@ class ParticipantMixin(AccessMixin):
                                                  and request.user != object.employee):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
+
+
+class ContextMixin:
+    def get_context_data(self, **kwargs):
+        kwargs['user_model'] = get_user_model()
+        return super().get_context_data(**kwargs)

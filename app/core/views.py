@@ -4,13 +4,14 @@ from datetime import datetime
 import schedule
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.views import LogoutView
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, TemplateView, ListView, UpdateView
 from django.views.generic.detail import DetailView
 
 from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, CreateOrderForm
-from app.core.mixins import EmployeeMixin, ClientMixin, ParticipantMixin
+from app.core.mixins import EmployeeMixin, ClientMixin, ParticipantMixin, ContextMixin
 
 # Главная страница, Регистрация Клиента (имя, фамилия, пароль, паспорт, страна, номер телефона, почта),
 # Вход Клиента (номер телефона/почта, пароль), Регистрация работника (имя, фамилия, пароль, номер телефона, страна
@@ -21,16 +22,16 @@ from app.core.mixins import EmployeeMixin, ClientMixin, ParticipantMixin
 from app.core.models import Car, Order
 
 
-class MainPageView(TemplateView):
+class MainPageView(ContextMixin, TemplateView):
     template_name = 'core/main_page.html'
-    extra_context = {'title': 'Main page', 'user_model': get_user_model()}
+    extra_context = {'title': 'Main page'}
 
 
-class SignUpClientView(FormView):
-    template_name = 'core/signup_client.html'
+class SignUpClientView(ContextMixin, FormView):
+    template_name = 'core/bootstrap_form.html'
     form_class = SignUpClientForm
     success_url = reverse_lazy('main_page')
-    extra_context = {'title': 'Sign Up: client', 'user_model': get_user_model()}
+    extra_context = {'title': 'Sign Up: client'}
 
     def form_valid(self, form):
         user = form.save()
@@ -38,22 +39,22 @@ class SignUpClientView(FormView):
         return super().form_valid(form)
 
 
-class LogInView(FormView):
-    template_name = 'core/login.html'
+class LogInView(ContextMixin, FormView):
+    template_name = 'core/bootstrap_form.html'
     form_class = LogInForm
     success_url = reverse_lazy('main_page')
-    extra_context = {'title': 'Login', 'user_model': get_user_model()}
+    extra_context = {'title': 'Login'}
 
     def form_valid(self, form):
         login(self.request, form.get_user())
         return super().form_valid(form)
 
 
-class SignUpEmployeeView(FormView):
-    template_name = 'core/signup_employee.html'
+class SignUpEmployeeView(ContextMixin, FormView):
+    template_name = 'core/bootstrap_form.html'
     form_class = SignUpEmployeeForm
     success_url = reverse_lazy('main_page')
-    extra_context = {'title': 'Sign Up: employee', 'user_model': get_user_model()}
+    extra_context = {'title': 'Sign Up: employee'}
 
     def form_valid(self, form):
         user = form.save()
@@ -65,17 +66,19 @@ class LogOutView(LogoutView):
     next_page = reverse_lazy('main_page')
 
 
-class CreateOrderView(ClientMixin, FormView):
+class CreateOrderView(ContextMixin, ClientMixin, FormView):
     template_name = 'core/create_order.html'
     form_class = CreateOrderForm
     success_url = reverse_lazy('list_my_orders')
-    extra_context = {'title': 'Create order', 'user_model': get_user_model()}
+    extra_context = {'title': 'Create order'}
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         coors = self.request.user.country_coordinates
         form.fields['from_to_points'].widget.attrs['default_lat'] = coors[0]
         form.fields['from_to_points'].widget.attrs['default_lon'] = coors[1]
+        form.fields['recipient'].queryset = get_user_model().objects.filter(role=get_user_model().CLIENT_ROLE)\
+                                                                    .exclude(id=self.request.user.id)
         return form
 
     def form_valid(self, form):
@@ -86,9 +89,9 @@ class CreateOrderView(ClientMixin, FormView):
         return super().form_valid(form)
 
 
-class ListMyOrdersView(ListView):
+class ListMyOrdersView(ContextMixin, ListView):
     template_name = 'core/list_my_orders.html'
-    extra_context = {'title': 'List my orders', 'order_model': Order, 'user_model': get_user_model()}
+    extra_context = {'title': 'List my orders', 'order_model': Order}
     ordering = '-start_datetime'
 
     def get_queryset(self):
@@ -99,25 +102,20 @@ class ListMyOrdersView(ListView):
             return Order.objects.filter(employee=user)
 
 
-class ListActualOrdersView(EmployeeMixin, ListView):
+class ListActualOrdersView(ContextMixin, EmployeeMixin, ListView):
     template_name = 'core/list_actual_orders.html'
     queryset = Order.objects.filter(status=Order.CREATED_TYPE)
     success_url = reverse_lazy('list_my_orders')
-    extra_context = {'title': 'List actual orders', 'user_model': get_user_model()}
+    extra_context = {'title': 'List actual orders'}
     ordering = '-start_datetime'
 
 
-async def accept_order(order_id):
-    await asyncio.sleep(30)
-    Order.objects.get(id=order_id).finish()
-
-
-class AcceptOrderView(EmployeeMixin, UpdateView):
+class AcceptOrderView(ContextMixin, EmployeeMixin, UpdateView):
     success_url = reverse_lazy('list_my_orders')
     queryset = Order.objects.filter(status=Order.CREATED_TYPE)
     extra_context = {'title': 'Accept order'}
     fields = ('car',)
-    template_name = 'core/accept_order.html'
+    template_name = 'core/bootstrap_form.html'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -126,28 +124,44 @@ class AcceptOrderView(EmployeeMixin, UpdateView):
         self.object.status = Order.ACCEPTED_TYPE
         self.object.save()
         form.save_m2m()
-        asyncio.run(accept_order(self.object.id))
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DetailOrderView(ParticipantMixin, DetailView):
+class DetailOrderView(ContextMixin, DetailView):
     model = Order
     template_name = 'core/detail_order.html'
-    extra_context = {'title': 'Order details', 'user_model': get_user_model()}
+    extra_context = {'title': 'Order details'}
 
     def get_success_url(self):
         success_url = reverse_lazy('detail_order', pk=self.kwargs['pk'])
         return str(success_url)
 
-    def post(self):
-        object = self.get_object()
-        object.finish()
-        return HttpResponseRedirect(self.get_success_url())
 
-
-class CreateCarView(EmployeeMixin, CreateView):
-    template_name = 'core/create_car.html'
+class CreateCarView(ContextMixin, EmployeeMixin, CreateView):
+    template_name = 'core/bootstrap_form.html'
     model = Car
     fields = '__all__'
     success_url = reverse_lazy('main_page')
-    extra_context = {'title': 'Create Car', 'user_model': get_user_model()}
+    extra_context = {'title': 'Create Car'}
+
+
+class ListCarsView(ContextMixin, EmployeeMixin, ListView):
+    template_name = 'core/list_cars.html'
+    model = Car
+    extra_context = {'title': 'List cars'}
+
+
+class FinishOrderView(ContextMixin, EmployeeMixin, ParticipantMixin, UpdateView):
+    template_name = 'core/bootstrap_form.html'
+    model = Order
+    fields = ()
+    success_url = reverse_lazy('list_my_orders')
+    extra_context = {'title': 'Finish order'}
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.status = Order.FINISHED_TYPE
+        self.object.finished_datetime = datetime.now()
+        self.object.save()
+        # send_mail()
+        return HttpResponseRedirect(self.get_success_url())

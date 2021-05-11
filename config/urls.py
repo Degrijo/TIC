@@ -19,7 +19,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from app.core.views import SignUpClientView, LogInView, MainPageView, SignUpEmployeeView, CreateOrderView, \
-    ListMyOrdersView, LogOutView, DetailOrderView, ListActualOrdersView, AcceptOrderView, CreateCarView
+    ListMyOrdersView, LogOutView, DetailOrderView, ListActualOrdersView, AcceptOrderView, CreateCarView, ListCarsView, \
+    FinishOrderView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,4 +35,6 @@ urlpatterns = [
     path('list_actual_orders/', ListActualOrdersView.as_view(), name='list_actual_orders'),
     path('accept_order/<int:pk>/', AcceptOrderView.as_view(), name='accept_order'),
     path('create_car/', CreateCarView.as_view(), name='create_car'),
+    path('list_cars/', ListCarsView.as_view(), name='list_cars'),
+    path('finish_order/<int:pk>/', FinishOrderView.as_view(), name='finish_order')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

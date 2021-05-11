@@ -59,3 +59,7 @@ body, html {
     margin-left: 33px;
     margin-bottom: 30px;
 }
+
+.error_field {
+    color: red;
+}

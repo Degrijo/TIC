@@ -26,8 +26,15 @@
                         <span class="dot" style="background-color: {{ order.color }}"></span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-6">
+                        <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
+                    </div>
+                    <div class="col-6">
+                        <a href="{% url 'finish_order' pk=order.id %}" class="btn btn-primary ">Finish order</a>
+                    </div>
+                </div>
             </div>
-            <a href="{% url 'detail_order' pk=order.id %}" class="btn btn-primary ">Go to details </a>
         </div>
     </div>
     {% endfor %}
