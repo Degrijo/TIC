@@ -1,12 +1,16 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.gis.db.models import MultiPointField
 from django.db import models
+from django.template.loader import render_to_string
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
 
 from django_countries.fields import CountryField
 from app.core.validators import PhoneNumberValidator
-from config.settings.common import DATETIME_FORMAT
+from config.settings.common import DATETIME_FORMAT, EMAIL_HOST_USER
 
 
 class UserManager(BaseUserManager):
@@ -150,8 +154,20 @@ class Order(models.Model):
         self.accept_datetime = timezone.now()
         self.status = Order.ACCEPTED_TYPE
         self.save()
+        for user in (self.sender, self.recipient, self.employee):
+            html = render_to_string('emails/accept_email.html', {'order': self,
+                                                                 'user': user,
+                                                                 'user_model': get_user_model()})
+            plain_message = strip_tags(html)
+            send_mail('order accepted', plain_message, EMAIL_HOST_USER, (user.email,), html_message=html)
 
     def finish(self):
         self.finish_datetime = timezone.now()
         self.status = Order.FINISHED_TYPE
         self.save()
+        for user in (self.sender, self.recipient, self.employee):
+            html = render_to_string('emails/accept_email.html', {'order': self,
+                                                                 'user': user,
+                                                                 'user_model': get_user_model()})
+            plain_message = strip_tags(html)
+            send_mail('order accepted', plain_message, EMAIL_HOST_USER, (user.email,), html_message=html)

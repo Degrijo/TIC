@@ -1,8 +1,5 @@
-from datetime import datetime
-
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.views import LogoutView
-from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -15,12 +12,12 @@ from app.core.models import Car, Order
 
 
 class MainPageView(ContextMixin, TemplateView):
-    template_name = 'core/main_page.html'
+    template_name = 'pages/main_page.html'
     extra_context = {'title': 'Main page'}
 
 
 class SignUpClientView(ContextMixin, FormView):
-    template_name = 'core/bootstrap_form.html'
+    template_name = 'pages/bootstrap_form.html'
     form_class = SignUpClientForm
     success_url = reverse_lazy('main_page')
     extra_context = {'title': 'Sign Up: client'}
@@ -32,7 +29,7 @@ class SignUpClientView(ContextMixin, FormView):
 
 
 class LogInView(ContextMixin, FormView):
-    template_name = 'core/bootstrap_form.html'
+    template_name = 'pages/bootstrap_form.html'
     form_class = LogInForm
     success_url = reverse_lazy('main_page')
     extra_context = {'title': 'Login'}
@@ -43,7 +40,7 @@ class LogInView(ContextMixin, FormView):
 
 
 class SignUpEmployeeView(ContextMixin, FormView):
-    template_name = 'core/bootstrap_form.html'
+    template_name = 'pages/bootstrap_form.html'
     form_class = SignUpEmployeeForm
     success_url = reverse_lazy('main_page')
     extra_context = {'title': 'Sign Up: employee'}
@@ -59,7 +56,7 @@ class LogOutView(LogoutView):
 
 
 class CreateOrderView(ContextMixin, ClientMixin, FormView):
-    template_name = 'core/create_order.html'
+    template_name = 'pages/create_order.html'
     form_class = CreateOrderForm
     success_url = reverse_lazy('list_my_orders')
     extra_context = {'title': 'Create order'}
@@ -82,7 +79,7 @@ class CreateOrderView(ContextMixin, ClientMixin, FormView):
 
 
 class ListMyOrdersView(ContextMixin, ListView):
-    template_name = 'core/list_my_orders.html'
+    template_name = 'pages/list_my_orders.html'
     extra_context = {'title': 'List my orders', 'order_model': Order}
     ordering = '-start_datetime'
 
@@ -95,7 +92,7 @@ class ListMyOrdersView(ContextMixin, ListView):
 
 
 class ListActualOrdersView(ContextMixin, EmployeeMixin, ListView):
-    template_name = 'core/list_actual_orders.html'
+    template_name = 'pages/list_actual_orders.html'
     queryset = Order.objects.filter(status=Order.CREATED_TYPE)
     success_url = reverse_lazy('list_my_orders')
     extra_context = {'title': 'List actual orders'}
@@ -107,7 +104,7 @@ class AcceptOrderView(ContextMixin, EmployeeMixin, UpdateView):
     queryset = Order.objects.filter(status=Order.CREATED_TYPE)
     extra_context = {'title': 'Accept order'}
     fields = ('car',)
-    template_name = 'core/bootstrap_form.html'
+    template_name = 'pages/bootstrap_form.html'
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -118,7 +115,7 @@ class AcceptOrderView(ContextMixin, EmployeeMixin, UpdateView):
 
 class DetailOrderView(ContextMixin, DetailView):
     model = Order
-    template_name = 'core/detail_order.html'
+    template_name = 'pages/detail_order.html'
     extra_context = {'title': 'Order details'}
 
     def get_success_url(self):
@@ -127,7 +124,7 @@ class DetailOrderView(ContextMixin, DetailView):
 
 
 class CreateCarView(ContextMixin, EmployeeMixin, CreateView):
-    template_name = 'core/bootstrap_form.html'
+    template_name = 'pages/bootstrap_form.html'
     model = Car
     fields = '__all__'
     success_url = reverse_lazy('main_page')
@@ -135,7 +132,7 @@ class CreateCarView(ContextMixin, EmployeeMixin, CreateView):
 
 
 class ListCarsView(ContextMixin, EmployeeMixin, ListView):
-    template_name = 'core/list_cars.html'
+    template_name = 'pages/list_cars.html'
     model = Car
     extra_context = {'title': 'List cars'}
 
@@ -147,5 +144,4 @@ class FinishOrderView(EmployeeMixin, ParticipantMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.object.finish()
-        # send_mail()
         return HttpResponseRedirect(self.success_url)
