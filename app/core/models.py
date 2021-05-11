@@ -1,17 +1,11 @@
-from datetime import datetime
-
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.gis.db.models import MultiPointField
 from django.db import models
+from django.utils import timezone
 
 from django_countries.fields import CountryField
 from app.core.validators import PhoneNumberValidator
-
-# 3) пользователь выбирает работника, заказывает перевозку, работник забирает груз и доставляет
-# Клиент, Работник(автомобили), Свойство Груза(стекло, одежда, еда, мебель, строительные материалы, техника),
-# Автомобиль (номер, тип, грузоподъемность), Тип Авто (газель, фура)
-# Перевозка(откуда, куда, цена, время принятия заказы, время завершения заказа, груз, клиент1, клиент2, работник, автомобиль, масса и свойста груза)
 from config.settings.common import DATETIME_FORMAT
 
 
@@ -120,7 +114,7 @@ class Order(models.Model):
     status = models.PositiveSmallIntegerField(default=CREATED_TYPE)
     from_to_points = MultiPointField()
     price = models.DecimalField(max_digits=9, decimal_places=2)
-    start_datetime = models.DateTimeField(auto_now_add=True)
+    start_datetime = models.DateTimeField(default=timezone.now)
     accept_datetime = models.DateTimeField(blank=True, null=True)
     finish_datetime = models.DateTimeField(blank=True, null=True)
     mass = models.PositiveSmallIntegerField()
@@ -151,7 +145,13 @@ class Order(models.Model):
             final.append((color, types[number]))
         return final
 
+    def accept(self, employee):
+        self.employee = employee
+        self.accept_datetime = timezone.now()
+        self.status = Order.ACCEPTED_TYPE
+        self.save()
+
     def finish(self):
-        self.finish_datetime = datetime.now()
+        self.finish_datetime = timezone.now()
         self.status = Order.FINISHED_TYPE
         self.save()

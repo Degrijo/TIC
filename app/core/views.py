@@ -111,10 +111,7 @@ class AcceptOrderView(ContextMixin, EmployeeMixin, UpdateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        self.object.employee = self.request.user
-        self.object.accept_datetime = datetime.now()
-        self.object.status = Order.ACCEPTED_TYPE
-        self.object.save()
+        self.object.accept(self.request.user)
         form.save_m2m()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -149,8 +146,6 @@ class FinishOrderView(EmployeeMixin, ParticipantMixin, View):
     object = None
 
     def get(self, request, *args, **kwargs):
-        self.object.status = Order.FINISHED_TYPE
-        self.object.finish_datetime = datetime.now()
-        self.object.save()
+        self.object.finish()
         # send_mail()
         return HttpResponseRedirect(self.success_url)
