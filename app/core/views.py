@@ -6,7 +6,7 @@ from django.views import View
 from django.views.generic import CreateView, FormView, TemplateView, ListView, UpdateView
 from django.views.generic.detail import DetailView
 
-from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, CreateOrderForm
+from app.core.forms import SignUpClientForm, SignUpEmployeeForm, LogInForm, CreateOrderForm, AcceptOrderForm
 from app.core.mixins import EmployeeMixin, ClientMixin, ParticipantMixin, ContextMixin
 from app.core.models import Car, Order
 
@@ -102,15 +102,13 @@ class ListActualOrdersView(ContextMixin, EmployeeMixin, ListView):
 class AcceptOrderView(ContextMixin, EmployeeMixin, UpdateView):
     success_url = reverse_lazy('list_my_orders')
     queryset = Order.objects.filter(status=Order.CREATED_TYPE)
+    form_class = AcceptOrderForm
     extra_context = {'title': 'Accept order'}
-    fields = ('car',)
-    template_name = 'pages/bootstrap_form.html'
+    template_name = 'pages/accept_order.html'
 
     def form_valid(self, form):
-        self.object = form.save(commit=False)
         self.object.accept(self.request.user)
-        form.save_m2m()
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
 
 class DetailOrderView(ContextMixin, DetailView):

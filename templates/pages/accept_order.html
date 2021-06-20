@@ -1,0 +1,17 @@
+{% extends 'pages/base.html' %}
+
+{% load bootstrap5 %}
+
+{% block content %}
+    <form method="post" class="form">
+        {% csrf_token %}
+        {% if form.fields.car.queryset %}
+            {% bootstrap_field form.car %}
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            {% endbuttons %}
+        {% else %}
+            <div class="mb-3">No free cars</div>
+        {% endif %}
+    </form>
+{% endblock %}

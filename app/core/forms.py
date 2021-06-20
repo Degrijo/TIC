@@ -2,10 +2,11 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.gis.forms import MultiPointField, OSMWidget
-from django.db.models import Q
+from django.db.models import Q, Exists, OuterRef
 from django.forms import ValidationError
 
-from app.core.models import Order
+from app.core.models import Order, Car
+from app.core.utils import calculate_price
 
 
 class SignUpForm(UserCreationForm):
@@ -74,6 +75,18 @@ class CreateOrderForm(forms.ModelForm):
     def save(self, commit=True):
         point1 = self.cleaned_data['from_to_points'][0]
         point2 = self.cleaned_data['from_to_points'][1]
-        price = round(point1.distance(point2) * self.cleaned_data['mass'] / 1000 + len(self.cleaned_data['cargo_features']) * 100, 2)
-        self.instance.price = price
+        self.instance.price = calculate_price(point1.distance(point2),
+                                              self.cleaned_data['mass'],
+                                              len(self.cleaned_data['cargo_features']))
         return super().save(commit)
+
+
+class AcceptOrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ('car',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        orders = Order.objects.filter(car=OuterRef('pk'), status=Order.ACCEPTED_TYPE)
+        self.fields['car'].queryset = Car.objects.annotate(busy=Exists(orders)).filter(busy=False)

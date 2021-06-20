@@ -3,14 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.gis.db.models import MultiPointField
 from django.db import models
-from django.template.loader import render_to_string
 from django.utils import timezone
-from django.core.mail import send_mail
-from django.utils.html import strip_tags
 
 from django_countries.fields import CountryField
+
+from app.core.utils import order_mailing
 from app.core.validators import PhoneNumberValidator
-from config.settings.common import DATETIME_FORMAT, EMAIL_HOST_USER
+from config.settings.common import DATETIME_FORMAT
 
 
 class UserManager(BaseUserManager):
@@ -27,11 +26,6 @@ class UserManager(BaseUserManager):
         user.set_password(password1)
         user.save()
         return user
-
-    def create_superuser(self, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        return self.create_client()
 
 
 class CustomUser(AbstractUser):
@@ -153,21 +147,15 @@ class Order(models.Model):
         self.employee = employee
         self.accept_datetime = timezone.now()
         self.status = Order.ACCEPTED_TYPE
-        self.save()
-        for user in (self.sender, self.recipient, self.employee):
-            html = render_to_string('emails/accept_email.html', {'order': self,
-                                                                 'user': user,
-                                                                 'user_model': get_user_model()})
-            plain_message = strip_tags(html)
-            send_mail('order accepted', plain_message, EMAIL_HOST_USER, (user.email,), html_message=html)
+        self.save(update_fields=('status', 'employee', 'accept_datetime'))
+        # context = {'order': self,
+        #            'user_model': get_user_model()}
+        # order_mailing(self, 'emails/accept_email.html', context, 'order accepted')
 
     def finish(self):
         self.finish_datetime = timezone.now()
         self.status = Order.FINISHED_TYPE
-        self.save()
-        for user in (self.sender, self.recipient, self.employee):
-            html = render_to_string('emails/accept_email.html', {'order': self,
-                                                                 'user': user,
-                                                                 'user_model': get_user_model()})
-            plain_message = strip_tags(html)
-            send_mail('order accepted', plain_message, EMAIL_HOST_USER, (user.email,), html_message=html)
+        self.save(update_fields=('status', 'finish_datetime'))
+        # context = {'order': self,
+        #            'user_model': get_user_model()}
+        # order_mailing(self, 'emails/accept_email.html', context, 'order accepted')
